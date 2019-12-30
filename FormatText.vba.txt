@@ -1,0 +1,23 @@
+Sub FormatText(varSearch As Variant)
+'Formats specific text on labels
+    Dim varFound As Variant
+    Dim strAddress As String, intPos As Integer
+    Set varFound = Cells.Find(varSearch, LookIn:=xlValues, LookAt:=xlPart)
+    If Not varFound Is Nothing Then
+        strAddress = varFound.Address
+        Do
+            With varFound
+                Do
+                    intPos = InStr(intPos + 1, .Value, varSearch, vbTextCompare)
+                    If intPos Then
+                    'FORMATTING GOES HERE
+                    '.Characters(Start:=intPos, Length:=Len(varSearch)).Font.FontStyle = "Bold"
+                     .Characters(Start:=intPos, Length:=Len(varSearch)).Font.Size = 14
+                  End If
+                Loop Until intPos = 0
+            End With
+        Set varFound = Cells.FindNext(varFound)
+        Loop While Not varFound Is Nothing And _
+        varFound.Address <> strAddress
+    End If
+End Sub

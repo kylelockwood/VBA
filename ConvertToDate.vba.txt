@@ -1,0 +1,26 @@
+Sub ConvertToDate(ws As Worksheet, col As Long)
+' Convert a string date to a Date
+    Dim i As Long
+    Dim strDate As String
+    Dim convDate As Date
+    Dim lastRow As Long
+
+    lastRow = ws.Cells(Rows.Count, col).End(xlUp).row
+    
+    For i = 1 To lastRow
+        strDate = ws.Cells(i, col).Value
+        If strDate = "" Then ' Skip blank cells
+            GoTo NextIteration
+        End If
+        On Error Resume Next
+        If IsError(CDate(strDate)) Or CDate(strDate) = 0 Then ' String cant be converted to Date
+            ws.Cells(i, col).Value = "" ' Make the value blank
+        Else
+            convDate = CDate(strDate)
+            ws.Cells(i, col).Value = convDate ' Otherwise convert to date
+        End If
+               
+NextIteration:
+    Next i
+    
+End Sub

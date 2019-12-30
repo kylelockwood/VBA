@@ -1,0 +1,15 @@
+Sub RemoveValueRange(ws As Worksheet, searchCol As Long, clearCol As Long, firstRow as Long, first As Variant, last As Variant)
+' Remove data that falls outside of range
+    Dim lastRow As Long
+    Dim valData As Variant
+    
+    lastRow = ws.Cells(Rows.Count, searchCol).End(xlUp).row
+
+    For i = firstRow To lastRow
+        valData = ws.Cells(i, searchCol).Value
+        If valData < first Or valData > last Then
+            ws.Cells(i, clearCol).Value = ""
+        End If
+    Next i
+
+End Sub

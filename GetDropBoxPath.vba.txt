@@ -1,0 +1,21 @@
+Function GetDropboxPath() As String
+    '---------------------------------------------------------------------------------'
+    '* Locates the Dropbox user path by using the local "info.json" file. ************'
+    '* Wrote by cesarmades ***********************************************************'
+    '---------------------------------------------------------------------------------'
+
+    ' Loads the local info.json file
+    Dim intFile As Integer: intFile = FreeFile
+    Open VBA.Interaction.Environ("USERPROFILE") & "\AppData\Local\Dropbox\info.json" For Input As #intFile
+
+    ' Stores info.json file content in a variable
+    Dim strFileContent As String: strFileContent = Input(LOF(intFile), intFile)
+    Close #intFile
+
+    ' Trims the string and returns the path
+    Dim intIPos As Integer: intIPos = VBA.Strings.InStr(1, strFileContent, """path""", vbTextCompare) + 9
+    Dim intFPos As Integer: intFPos = VBA.Strings.InStr(1, strFileContent, """host""", vbTextCompare) - 3
+
+    GetDropboxPath = VBA.Strings.Replace(Mid(strFileContent, intIPos, intFPos - intIPos), "\\", "\")
+    'Debug.Print ("Dropbox path: " & GetDropboxPath)
+End Function

@@ -1,0 +1,26 @@
+Function CreateDictionary(sheet As String, keyCol As String, valCol As String, firstRow, lastRow) As Dictionary
+' Creates a dictionary using two columns data
+    Set CreateDictionary = New Dictionary
+    Dim rng As Range: Set rng = Sheets(sheet).Range(keyCol & ":" & valCol)
+    Dim i As Long
+    Dim lastCol As Long ' for non-adjacent ("A:ZZ")
+    Dim valData As Variant
+    lastCol = rng.Columns.Count
+    For i = firstRow To lastRow
+        If (rng(i, 1).Value = "") Then Exit Function
+        valData = rng(i, 1).Value & " " & rng(i, lastCol).Value
+        CreateDictionary.Add i, valData
+        Debug.Print i, valData
+    Next
+End Function
+
+' Used this in Tip Sheet.xls 072219
+Function CreateDictionary(book As String, sheet As String, valCol As Long, firstRow As Long, lastRow As Long) As Dictionary
+    Set CreateDictionary = New Dictionary
+    Dim i As Long
+    For i = firstRow To lastRow
+        ' Keys are set to "i" which cooresponds row number
+        CreateDictionary.Add i, Workbooks(book).Sheets(sheet).Cells(i, valCol).Value
+        Debug.Print i, Workbooks(book).Sheets(sheet).Cells(i, valCol).Value
+    Next
+End Function

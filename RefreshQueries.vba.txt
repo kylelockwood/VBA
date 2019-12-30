@@ -1,0 +1,24 @@
+Public Sub RefreshQueries()
+' Refreshes data connections between all connected databases
+    Application.DisplayStatusBar = True
+
+    Dim wks As Worksheet
+    Dim qt As QueryTable
+    Dim lo As ListObject
+    
+    For Each wks In Worksheets
+        For Each qt In wks.QueryTables
+            qt.Refresh BackgroundQuery:=False
+        Next qt
+        
+        For Each lo In wks.ListObjects
+            'If error, relink workbook in the query menu
+            Application.StatusBar = "Refreshing Database : " & lo
+            lo.QueryTable.Refresh BackgroundQuery:=False
+        Next lo
+        
+    Next wks
+    
+    Set qt = Nothing
+    Set wks = Nothing
+    Application.StatusBar = False

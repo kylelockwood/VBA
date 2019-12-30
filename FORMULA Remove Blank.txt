@@ -1,0 +1,4 @@
+=IFERROR(INDEX('$range$ with $blanks$',MATCH(0,IF(""<>'$range$ with $blanks$',COUNTIF('$top new range$:$top new range','$range$ wiht $blanks$),""),0)),"")
+
+Example:
+=IFERROR(INDEX($A$1:A$10,MATCH(0,IF(""<>$A$1:$A$10,COUNTIF($B$1:$B1,$A$1:$A$15),""),0)),"")

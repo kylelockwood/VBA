@@ -1,0 +1,6 @@
+Function SheetCount(path, fileName As String) As Integer
+'Counts how many sheets are in a workbook
+    Workbooks.Open (path & fileName)
+    SheetCount = Workbooks(fileName).Worksheets.Count
+    Workbooks(fileName).Close SaveChanges:=False
+End Function

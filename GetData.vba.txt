@@ -1,0 +1,37 @@
+Sub GetData(directory As String, fileName As String, fileType As String, ByRef sourceSheets() As Variant, ByRef sourceColumns() As Variant, targetSheet As Worksheet)
+'Copies data from a workbook to a specific sheet
+    Application.CutCopyMode = False
+
+    Dim wb As Workbook:         Set wb = ActiveWorkbook
+    Dim targetRow As Integer:   targetRow = 1
+    Dim sourceColumn As Range, targetColum As Range
+    
+    Dim targetFile As String
+    targetFile = NewestFile(directory, fileName & fileType) 'Finds the most recent fileName in directory
+    If targetFile = "" Then 'does the file exist?
+        Call ImportError(targetFile, directory)
+        Exit Sub
+    End If
+         
+    targetSheet.UsedRange.ClearContents 'clears the sheet of old data
+    
+    Workbooks.Open (directory & targetFile) ' open the target file
+    
+    Dim lastRow As Long:    lastRow = ActiveWorkbook.ActiveSheet.Cells(Rows.Count, 1).End(xlUp).Row 'find the last row with data in the target sheet
+    
+    For j = 0 To UBound(sourceSheets) 'j is each sheet number in array sourceSheets()
+        For i = 0 To UBound(sourceColumns) 'i is each column number in array sourceColumns()
+            'store the data contained in the range
+            Set sourceColumn = Workbooks(targetFile).Worksheets(sourceSheets(j)).Range(Cells(1, sourceColumns(i)).Address(), Cells(lastRow, sourceColumns(i)).Address())
+            'choose where it will be pasted
+            Set targetColumn = targetSheet.Range(Cells(targetRow, i + 1).Address(), Cells(lastRow + targetRow, i + 1).Address())
+            'copy and paste
+            sourceColumn.Copy Destination:=targetColumn
+        Next i
+        If UBound(sourceSheets) > 0 Then 'if the sheets in sourceSheets are greater than 1, set the copy row below the previously copied data
+            targetRow = targetRow + lastRow
+        End If
+    Next j
+    
+    Workbooks(targetFile).Close
+End Sub

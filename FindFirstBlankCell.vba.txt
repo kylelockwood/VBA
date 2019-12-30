@@ -1,0 +1,19 @@
+Function FindFirstBlankCell() As String
+'Finds the first blank cell on Sheet 7
+    Dim i As Integer, j As Integer, lastRow As Integer
+    lastRow = Sheet7.Cells(Sheet7.Rows.Count, 1).End(xlUp).Row
+    For i = 1 To 4
+        If i = 4 Then
+            lastRow = lastRow + 1
+            i = 1
+        End If
+        If IsEmpty(Sheet7.Cells(lastRow, i)) Then
+            If lastRow > 10 Then 'Deletes blank page
+                lastRow = lastRow - 10
+                Sheet7.UsedRange.ClearContents 'Clears old data
+            End If
+            FindFirstBlankCell = Sheet7.Cells(lastRow, i).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+            Exit Function
+        End If
+    Next i
+End Function

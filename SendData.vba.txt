@@ -1,0 +1,16 @@
+Sub SendData(sourceBook As String, sourceSheet As Worksheet, ByRef sourceColumns() As Variant, sourceLastRow As Long, directory As String, fileName As String, fileType As String, targetSheet As String, targetRow As Long, ByRef targetColumns() As Variant)
+' Copies data from active workbook and pastes it in target workbook
+    Application.CutCopyMode = False
+
+    Dim targetFile As String:    targetFile = NewestFile(directory, fileName & fileType)
+    
+    For i = 0 To UBound(sourceColumns) 'i is each column number in array sourceColumns()
+        'store the data contained in the range
+        Set sourceColumn = sourceSheet.Range(Cells(2, sourceColumns(i)).Address(), Cells(sourceLastRow, sourceColumns(i)).Address())
+        'choose where it will be pasted
+        Set targetColumn = Workbooks(targetFile).Worksheets(targetSheet).Range(Cells(targetRow, targetColumns(i)).Address(), Cells(targetRow + sourceLastRow, targetColumns(i)).Address())
+        'copy and paste
+        sourceColumn.Copy
+        targetColumn.PasteSpecial xlPasteValues
+    Next i
+End Sub
